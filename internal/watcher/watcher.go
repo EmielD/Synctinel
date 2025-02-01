@@ -10,7 +10,12 @@ import (
 	"github.com/fsnotify/fsnotify"
 )
 
-func Init() {
+var dirPathFilters = []string{}
+
+func Init(config *config.Config) {
+
+	dirPathFilters = config.LoadDirPathFilters()
+
 	watcher, err := fsnotify.NewWatcher()
 	if err != nil {
 		log.Fatal(err)
@@ -67,21 +72,21 @@ func Init() {
 func WalkDir(root string) ([]string, error) {
 	var files []string
 	err := filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
-
-		// Extract into seperate function and make it have possibility to contain multiple filters
 		if info.IsDir() && pathNotInFilters(path) {
 			files = append(files, path)
 		}
 		return nil
 	})
+	if err != nil {
+		return nil, err
+	}
+
 	return files, err
 }
 
-var dirPathFilters = config.LoadDirPathFilters()
-
 func pathNotInFilters(path string) bool {
 	for _, filter := range dirPathFilters {
-		if strings.HasSuffix(path, filter) {
+		if strings.Contains(path, filter) {
 			return false
 		}
 	}

@@ -1,24 +1,28 @@
 package config
 
-type config struct {
+type Config struct {
 	dirPaths       []string
 	dirPathFilters []string
 }
 
-var cfg = config{}
+var cfg = Config{}
 
-func SaveToDirPaths(dirPath string) {
+func NewConfig() *Config {
+	return &Config{}
+}
+
+func (c *Config) SaveToDirPaths(dirPath string) {
 	cfg.dirPaths = append(cfg.dirPaths, dirPath)
 }
 
-func LoadDirPaths() []string {
+func (c *Config) LoadDirPaths() []string {
 	return cfg.dirPaths
 }
 
-func SaveToDirPathFilters(dirPath string) {
+func (c *Config) SaveToDirPathFilters(dirPath string) {
 	cfg.dirPathFilters = append(cfg.dirPathFilters, dirPath)
 }
 
-func LoadDirPathFilters() []string {
+func (c *Config) LoadDirPathFilters() []string {
 	return cfg.dirPathFilters
 }
